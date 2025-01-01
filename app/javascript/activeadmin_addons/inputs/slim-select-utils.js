@@ -24,7 +24,7 @@ export function ransackSearch(search, currentData, settings) {
     if (search.length < settings.minimumInputLength) {
       reject(`Please enter ${settings.minimumInputLength} or more characters`);
     }
-
+    const [baseUrl, existingQueryString] = settings.url.split('?');
     const defaultQuery = {
       order: settings.order,
       q: {
@@ -38,7 +38,7 @@ export function ransackSearch(search, currentData, settings) {
     const csrfToken = csrfTokenEl ? csrfTokenEl.getAttribute('content') : null;
 
     const queryString = parseObjectToQuery(finalQuery);
-    fetch(`${settings.url}?${queryString}`, {
+    fetch(`${baseUrl}?${queryString}${existingQueryString ? `&${decodeURIComponent(existingQueryString)}` : ''}`, {
       method: 'GET',
       headers: {
         'X-CSRF-TOKEN': csrfToken,
